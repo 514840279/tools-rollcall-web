@@ -9,10 +9,12 @@ vue add vuestic-ui
 
 npm install sass-loader node-sass --save
 npm install axios -S
+npm install qs -S
 
 npm install
 
-
+vue ui
+安裝 vuex和router
 ```
 
 ### Compiles and hot-reloads for development
