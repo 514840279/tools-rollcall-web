@@ -1,6 +1,6 @@
 <template>
-  <div class="hello">
-    <va-button @click="toAdd()"> {{ title }} </va-button>
+  <div class="class-room">
+    <va-button @click="toAdd()"> {{ title }}</va-button>
 
     <table style="width: 100%" class="va-table center">
       <tbody>
@@ -11,16 +11,10 @@
         </tr>
       </tbody>
     </table>
-
-    <va-modal
-      v-model="showModal"
-      :title="title"
-      hide-default-actions
-      overlay-opacity="0.2"
-    >
-      <ClassRoomAdd v-if="showModal" @closeAdd="closeModal"></ClassRoomAdd>
-    </va-modal>
   </div>
+  <va-modal v-model="showModal" :title="title" hide-default-actions overlay-opacity="0.2">
+    <ClassRoomAdd v-if="showModal" @closeAdd="closeModal"></ClassRoomAdd>
+  </va-modal>
 </template>
 
 <script>
@@ -66,8 +60,15 @@ export default {
       this.showModal = val;
     },
     showPerson(row) {
-      this.$emit("toShowPerson", row);
+      this.$emit("toShowPerson", true);
+      this.$store.commit("rollcall/setClassRoom", row);
+      // this.$store.commit("rollcall/setMess", row.uuid);
     },
   },
 };
 </script>
+<style lang="scss" scoped>
+.class-room {
+  text-align: center;
+}
+</style>

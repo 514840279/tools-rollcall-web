@@ -5,7 +5,7 @@
         <ClassRoom @toShowPerson="toShowPerson" />
       </div>
       <div class="flex md10">
-        <PersonList v-if="showPerson" :classid="classid" />
+        <PersonList v-if="showPerson" />
       </div>
     </div>
   </div>
@@ -13,7 +13,7 @@
 
 <script>
 // @ is an alias to /src
-import PersonList from "@/components/Person.vue";
+import PersonList from "@/components/person/Person.vue";
 import ClassRoom from "@/components/classroom/ClassRoom.vue";
 
 export default {
@@ -24,16 +24,14 @@ export default {
   },
   data() {
     return {
-      classid: "",
       showPerson: false,
+      message: "",
     };
   },
+  mounted() {},
   methods: {
-    toShowPerson(row) {
-      console.log(row);
-      this.showPerson = false;
-      this.classid = row.uuid;
-      this.showPerson = true;
+    toShowPerson(val) {
+      this.showPerson = val;
     },
   },
 };

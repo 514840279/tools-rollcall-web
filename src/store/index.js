@@ -1,6 +1,8 @@
-import Vuex from 'vuex';
-import rollcall from './rollcall';
+import { createStore } from 'vuex'
+import rollcall from './modules/rollcall';
 
-export const store = new Vuex.Store({
-  rollcall
+export default  createStore({
+  modules: {
+    rollcall,
+  }
 })
