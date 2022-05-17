@@ -14,6 +14,9 @@ export default {
     pid: {
       type: String,
     },
+    item: {
+      type: Object,
+    },
   },
   data() {
     return {
@@ -22,10 +25,13 @@ export default {
     };
   },
   mounted() {
-    this.params.classId = this.pid;
+    this.init();
   },
   methods: {
-    init() {},
+    init() {
+      this.params = this.item;
+      this.params.classId = this.pid;
+    },
     add() {
       let _this = this;
       this.$http

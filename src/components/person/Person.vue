@@ -8,7 +8,16 @@
     <div id="person-row" class="row">
       <div class="flex md4 lg3" v-for="(item, index) in datas" :key="index">
         <va-card>
-          <va-card-title>{{ item.no }}</va-card-title>
+          <va-card-title>
+            <div class="row">
+              <div class="flex md10 row-left">
+                {{ item.no }}
+              </div>
+              <div class="flex md2 row-right">
+                <a href="#" @click="update(item)">修改</a>
+              </div>
+            </div></va-card-title
+          >
           <va-card-content>
             <!-- <va-avatar size="150px" font-size="150" icon="person"></va-avatar> -->
             <va-avatar size="150px" font-size="100px">
@@ -24,7 +33,12 @@
   </div>
 
   <va-modal v-model="showModal" :title="title" hide-default-actions overlay-opacity="0.2">
-    <PersonAdd v-if="showModal" :pid="pid" @closeAdd="closeModal"></PersonAdd>
+    <PersonAdd
+      v-if="showModal"
+      :pid="pid"
+      :item="item"
+      @closeAdd="closeModal"
+    ></PersonAdd>
   </va-modal>
 
   <va-modal v-model="showRollCall" fullscreen :message="message" hide-default-actions>
@@ -59,6 +73,7 @@ export default {
       showRollCall2: false,
       person: {},
       datas: [],
+      item: {},
     };
   },
   mounted() {
@@ -84,6 +99,10 @@ export default {
         });
     },
     toAdd() {
+      this.showModal = true;
+    },
+    update(item) {
+      this.item = item;
       this.showModal = true;
     },
     closeModal(val) {
@@ -122,6 +141,12 @@ export default {
 #person-row {
   width: 100%;
   text-align: center;
+  .row-left {
+    text-align: left;
+  }
+  .row-right {
+    text-align: right;
+  }
   .name {
     margin-top: 15px;
   }

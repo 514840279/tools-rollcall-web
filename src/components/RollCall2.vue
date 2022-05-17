@@ -34,10 +34,10 @@
           <div class="righe">
             <div class="row" v-for="(per, inc) in winPersons" :key="inc">
               <div class="flex md12">
-                <va-avatar size="80px" font-size="10px" color="danger">{{
-                  showFirstChar(per.name, 3)
+                <va-avatar size="40px" font-size="20px" color="danger">{{
+                  showFirstChar(per.name, 1)
                 }}</va-avatar>
-                <span>{{ per.name }}</span>
+                <span class="mg">{{ per.no + "--" + per.name }}</span>
               </div>
             </div>
           </div>
@@ -46,7 +46,7 @@
       <div class="row">
         <div v-for="(per, inc) in persons" :key="inc" class="flex md0.5">
           <va-avatar size="50px" font-size="10px">{{
-            showFirstChar(per.name, 3)
+            showFirstChar(per.name, 1)
           }}</va-avatar>
         </div>
       </div>
@@ -140,3 +140,10 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.mg {
+  margin-left: 20px;
+  font-size: 20px;
+  font-weight: 200;
+}
+</style>

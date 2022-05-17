@@ -5,15 +5,22 @@
     <table style="width: 100%" class="va-table center">
       <tbody>
         <tr v-for="row in datas" :key="row.uuid">
-          <td style="width: 100%; text-align: center" @click="showPerson(row)">
-            {{ row.name }}
+          <td style="width: 100%; text-align: center">
+            <div class="row">
+              <div class="flex md6">
+                <span @click="showPerson(row)">{{ row.name }}</span>
+              </div>
+              <div class="flex md4">
+                <a href="#" @click="update(row)">修改</a>
+              </div>
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
   <va-modal v-model="showModal" :title="title" hide-default-actions overlay-opacity="0.2">
-    <ClassRoomAdd v-if="showModal" @closeAdd="closeModal"></ClassRoomAdd>
+    <ClassRoomAdd v-if="showModal" @closeAdd="closeModal" :item="item"></ClassRoomAdd>
   </va-modal>
 </template>
 
@@ -32,6 +39,7 @@ export default {
       showModal: false,
       title: "添加班級",
       datas: [],
+      item: {},
     };
   },
   mounted() {
@@ -53,6 +61,10 @@ export default {
         });
     },
     toAdd() {
+      this.showModal = true;
+    },
+    update(row) {
+      this.item = row;
       this.showModal = true;
     },
     closeModal(val) {

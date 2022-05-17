@@ -9,13 +9,23 @@
 <script>
 export default {
   name: "ClassRoomAdd",
+  props: {
+    item: {
+      type: Object,
+    },
+  },
+  mounted() {
+    this.init();
+  },
   data() {
     return {
       params: {},
     };
   },
   methods: {
-    init() {},
+    init() {
+      this.params = this.item;
+    },
     add() {
       let _this = this;
       this.$http
