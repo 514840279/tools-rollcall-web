@@ -16,6 +16,8 @@
 import PersonList from "@/components/person/Person.vue";
 import ClassRoom from "@/components/classroom/ClassRoom.vue";
 
+
+
 export default {
   name: "HomeView",
   components: {

@@ -2,7 +2,8 @@
   <div class="person-list">
     <div v-text="'当前班级：' + showClassName" class="className"></div>
     <va-button @click="toAdd()"> {{ title }}</va-button>
-    <va-button @click="toRollCall()"> 点名</va-button>
+    <!-- <va-button @click="toRollCall()"> 点名</va-button> -->
+    <va-button @click="toRollCall2()"> 点名</va-button>
 
     <div id="person-row" class="row">
       <div class="flex md4 lg3" v-for="(item, index) in datas" :key="index">
@@ -29,21 +30,33 @@
   <va-modal v-model="showRollCall" fullscreen :message="message" hide-default-actions>
     <RollCall v-if="showRollCall"></RollCall>
   </va-modal>
+
+  <va-modal
+    v-model="showRollCall2"
+    fullscreen
+    :message="message"
+    max-width="none"
+    hide-default-actions
+  >
+    <RollCall2 v-if="showRollCall2"></RollCall2>
+  </va-modal>
 </template>
 
 <script>
 import PersonAdd from "./Add";
 import RollCall from "../RollCall";
+import RollCall2 from "../RollCall2";
 
 export default {
   name: "person-list",
-  components: { PersonAdd, RollCall },
+  components: { PersonAdd, RollCall, RollCall2 },
   data() {
     return {
       pid: "",
       title: "添加学生",
       showModal: false,
       showRollCall: false,
+      showRollCall2: false,
       person: {},
       datas: [],
     };
@@ -80,6 +93,10 @@ export default {
     toRollCall() {
       this.$store.commit("rollcall/setPersonList", this.datas);
       this.showRollCall = true;
+    },
+    toRollCall2() {
+      this.$store.commit("rollcall/setPersonList", this.datas);
+      this.showRollCall2 = true;
     },
     showFirstChar(item) {
       return item.substring(0, 1);
