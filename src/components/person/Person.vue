@@ -1,69 +1,80 @@
 <template>
   <div class="person-list">
     <div v-text="'当前班级：' + showClassName" class="className"></div>
-    <va-button @click="toAdd()"> {{ title }}</va-button>
+    <el-button @click="toAdd()"> {{ title }}</el-button>
     <!-- <va-button @click="toRollCall()"> 点名</va-button> -->
-    <va-button @click="toRollCall2()"> 点名</va-button>
+    <el-button @click="toRollCall2()"> 点名</el-button>
 
-    <div id="person-row" class="row">
-      <div class="flex md4 lg3" v-for="(item, index) in datas" :key="index">
-        <va-card>
-          <va-card-title>
-            <div class="row">
-              <div class="flex md10 row-left">
+    <el-row id="person-row">
+      <el-col :span="4" v-for="(item, index) in datas" :key="index">
+        <el-card>
+          <el-card-title>
+            <el-row class="row">
+              <el-col :span="18" class="row-left">
                 {{ item.no }}
-              </div>
-              <div class="flex md2 row-right">
-                <a href="#" @click="update(item)">修改</a>
-              </div>
-            </div></va-card-title
-          >
-          <va-card-content>
+              </el-col>
+              <el-col :span="6" class="row-right">
+                <a href="#" @click="del(item)">刪除</a>
+              </el-col>
+            </el-row>
+          </el-card-title>
+          <el-card-content @click="update(item)" class="ocard">
             <!-- <va-avatar size="150px" font-size="150" icon="person"></va-avatar> -->
-            <va-avatar size="150px" font-size="100px">
-              <span v-text="showFirstChar(item.name)"></span>
-            </va-avatar>
+            <el-avatar :size="150" class="abackg">
+              <span class="avatar" v-text="showFirstChar(item.name)"></span>
+            </el-avatar>
             <div class="name">
               <span>{{ item.name }}</span>
             </div>
-          </va-card-content>
-        </va-card>
-      </div>
-    </div>
+          </el-card-content>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 
-  <va-modal v-model="showModal" :title="title" hide-default-actions overlay-opacity="0.2">
+  <el-dialog
+    v-model="showModal"
+    :title="title"
+    :modal="true"
+    hide-default-actions
+    overlay-opacity="0.2"
+  >
     <PersonAdd
       v-if="showModal"
       :pid="pid"
       :item="item"
+      :destroy-on-close="true"
       @closeAdd="closeModal"
     ></PersonAdd>
-  </va-modal>
+  </el-dialog>
 
-  <va-modal v-model="showRollCall" fullscreen :message="message" hide-default-actions>
+  <el-dialog
+    v-model="showRollCall"
+    :fullscreen="true"
+    :message="message"
+    hide-default-actions
+  >
     <RollCall v-if="showRollCall"></RollCall>
-  </va-modal>
+  </el-dialog>
 
-  <va-modal
+  <el-dialog
     v-model="showRollCall2"
     fullscreen
     :message="message"
     max-width="none"
     hide-default-actions
   >
-    <RollCall2 v-if="showRollCall2"></RollCall2>
-  </va-modal>
+    <RollCall v-if="showRollCall2"></RollCall>
+  </el-dialog>
 </template>
 
 <script>
 import PersonAdd from "./Add";
 import RollCall from "../RollCall";
-import RollCall2 from "../RollCall2";
 
 export default {
   name: "person-list",
-  components: { PersonAdd, RollCall, RollCall2 },
+  components: { PersonAdd, RollCall },
   data() {
     return {
       pid: "",
@@ -88,9 +99,10 @@ export default {
         .post("/rollcall/person/page", {
           info: { classId: this.pid },
           sortList: [{ sortName: "createTime", sortOrder: "desc" }],
+          pageSize: 500,
         })
-        .then((data) => {
-          _this.datas = data.content;
+        .then((response) => {
+          _this.datas = response.content;
           console.log(_this.datas);
         })
         .catch((err) => {
@@ -99,11 +111,26 @@ export default {
         });
     },
     toAdd() {
+      this.item = {};
       this.showModal = true;
     },
     update(item) {
       this.item = item;
       this.showModal = true;
+    },
+    del(item) {
+      let _this = this;
+      this.$http
+        .post("/rollcall/person/delete", item)
+        .then((response) => {
+          if (response) {
+            _this.init();
+          }
+        })
+        .catch((err) => {
+          // TODO
+          console.log(err);
+        });
     },
     closeModal(val) {
       this.init();
@@ -118,7 +145,11 @@ export default {
       this.showRollCall2 = true;
     },
     showFirstChar(item) {
-      return item.substring(0, 1);
+      if (item) {
+        return item.substring(0, 1);
+      } else {
+        return "未知";
+      }
     },
   },
   computed: {
@@ -139,6 +170,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 #person-row {
+  margin-top: 8px;
   width: 100%;
   text-align: center;
   .row-left {
@@ -149,12 +181,26 @@ export default {
   }
   .name {
     margin-top: 15px;
+    background-color: beige;
+    padding: 0px;
+    width: 100%;
+    border: 1px solid #c4d67b;
   }
   span {
     font-size: 28px;
   }
-  i {
-    font-size: 150px;
+  .abackg {
+    background-color: rgb(155, 194, 219);
+    .avatar {
+      font-size: 110px;
+      :hover {
+        margin-top: 5px;
+      }
+    }
+  }
+
+  .ocard {
+    cursor: pointer;
   }
 }
 </style>

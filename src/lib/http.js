@@ -9,21 +9,42 @@ const httpService = axios.create({
 });
 
 // 设置 post、put 默认 Content-Type
-httpService.defaults.headers.post['Content-Type'] = 'application/json';
-httpService.defaults.headers.put['Content-Type'] = 'application/json';
+// httpService.defaults.headers.post['Content-Type'] = 'application/json';
+// httpService.defaults.headers.put['Content-Type'] = 'application/json';
+
+/** 简单文本*/
+// var contentTypeText = 'application/x-www-form-urlencoded';
+/** 文件传输*/
+// var contentTypeFile = 'multipart/form-data';
+/** 文件下载*/
+// var contentTypeFileDownload = 'application/octet-stream';
+/** JSON传输*/
+// var contentTypeJson = 'application/json';
 
 // request拦截器
 httpService.interceptors.request.use(
   config => {
-      // 根据条件加入token-安全携带
-      if (config.user) { // 需自定义
-          // 让每个请求携带token
-          config.headers['User-Token'] = '';
-      }
-      if(config.method == 'post'){
-        config.data = JSON.stringify(config.data);
-      }
-      return config;
+    // 根据条件加入token-安全携带
+    if (config.user) { // 需自定义
+        // 让每个请求携带token
+        config.headers['User-Token'] = '';
+    }
+        
+    // config.responseType = contentTypeJson;
+    config.withCredentials = true;
+    
+    if (config.method == 'post') {
+        if (config.type == "file") {
+            console.log(config.data.get("file"));
+            // config.headers['Content-Type'] = 'multipart/form-data';
+        } else {
+            config.data = config.data instanceof FormData ? config.data : JSON.stringify(config.data);
+            config.headers['Content-Type'] = 'application/json';
+        }      
+    } else {
+        config.url = encodeURI(config.url);
+    }
+    return config;
   }, 
   error => {
       // 请求错误处理
@@ -115,11 +136,8 @@ const  http = {
    **/
     get(url, params = {}) {
         return new Promise((resolve, reject) => {
-            httpService({
-                url: url,
-                method: 'get',
-                params: params
-            }).then(response => {
+            httpService.get(url, params)
+            .then(response => {
                 resolve(response.data);
             }).catch(error => {
                 reject(error);
@@ -133,11 +151,8 @@ const  http = {
      **/
     post(url, params = {}) {
         return new Promise((resolve, reject) => {
-            httpService({
-                url: url,
-                method: 'post',
-                data: params
-            }).then(response => {
+            httpService.post(url, params)
+            .then(response => {
                 resolve(response.data);
             }).catch(error => {
                 reject(error);
@@ -160,14 +175,12 @@ const  http = {
             })
         })
     },
-  
    /**
    * 封装put请求
    * @param url 请求地址
    * @param data 参数
    * @returns {Promise}
    */
-  
     put(url,data = {}){
         return new Promise((resolve,reject) => {
             httpService.put(url,data)
@@ -178,14 +191,12 @@ const  http = {
             })
         })
     },
-  
    /**
    * 封装delete请求
    * @param url 请求地址
    * @param data 参数
    * @returns {Promise}
    */
-  
     del(url,data = {}){
       return new Promise((resolve,reject) => {
         httpService.delete(url,data)
@@ -201,14 +212,16 @@ const  http = {
     *  @param url: 请求地址
     *  @param params:参数
     * */
-    fileUpload(url, params = {}) {
+    fileUpload(url,data) {
         return new Promise((resolve, reject) => {
-            httpService({
-                url: url,
-                method: 'post',
-                data: params,
-                headers: { 'Content-Type': 'multipart/form-data' }
-            }).then(response => {
+            const options = {
+                method: 'POST',
+                // headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                data,
+                url,
+              };
+              httpService(options)// 不设置内容类型, 没有该项后台会抛出异常RequestFacade cannot be cast to MultipartHttpServletRequest，该项表明ContentType:multipart/form-data
+            .then(response => {
                 resolve(response.data);
             }).catch(error => {
                 reject(error);

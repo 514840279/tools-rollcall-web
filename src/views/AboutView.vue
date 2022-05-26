@@ -1,70 +1,66 @@
 <template>
   <div class="about">
-    <div class="row">
-      <div class="flex md12">
+    <el-row class="row-bg">
+      <el-col :span="12" :offset="6">
         <div class="item">
-          <va-avatar size="200px" src="/rollcall/static/1.jpg"> </va-avatar>
+          <el-avatar :size="200" src="/rollcall/static/1.jpg"> </el-avatar>
         </div>
         <div class="item fonda">
           <span>王滕辉</span>
           <a href="https://github.com/514840279" class="afro" target="_blank"
-            ><va-avatar
-              size="30px"
+            ><el-avatar
+              :size="30"
               src="/rollcall/static/logo/a23b4cf17327527ae66aad5d13f059da.png"
             >
-            </va-avatar
+            </el-avatar
           ></a>
           <a href="https://www.jianshu.com/u/cf31b9838b17" class="afro" target="_blank"
-            ><va-avatar
-              size="30px"
+            ><el-avatar
+              :size="30"
               src="/rollcall/static/logo/a0137cb8b628250f276e6b8b192f2014.png"
             >
-            </va-avatar
+            </el-avatar
           ></a>
         </div>
-      </div>
+      </el-col>
+    </el-row>
 
-      <div class="flex md6 offset--md3">
-        <div class="item">
-          <div class="row">
-            <div class="flex md12">
-              <table class="va-table" style="width: 100%; height: 100%">
-                <thead>
-                  <tr>
-                    <th class="fondu">技术</th>
-                    <th>熟练度</th>
-                    <th class="fondu">技术</th>
-                    <th>熟练度</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(skill, ind) in skills" :key="ind">
-                    <td class="fondu">{{ skill.name1 + "：" }}</td>
-                    <td>
-                      <va-rating
-                        v-model="skill.level1"
-                        size="large"
-                        :halves="true"
-                        readonly="true"
-                      />
-                    </td>
-                    <td class="fondu">{{ skill.name2 + "：" }}</td>
-                    <td>
-                      <va-rating
-                        v-model="skill.level2"
-                        size="large"
-                        :halves="true"
-                        readonly="true"
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <el-row class="row-bg">
+      <el-col :span="12" :offset="6">
+        <table class="va-table" style="width: 100%; height: 100%">
+          <!-- <thead>
+            <tr>
+              <th class="fondu">技术</th>
+              <th>熟练度</th>
+              <th class="fondu">技术</th>
+              <th>熟练度</th>
+            </tr>
+          </thead> -->
+          <tbody>
+            <tr v-for="(skill, ind) in skills" :key="ind">
+              <td class="fondu">{{ skill.name1 + "：" }}</td>
+              <td>
+                <el-rate
+                  v-model="skill.level1"
+                  size="large"
+                  :halves="true"
+                  readonly="true"
+                />
+              </td>
+              <td class="fondu">{{ skill.name2 + "：" }}</td>
+              <td>
+                <el-rate
+                  v-model="skill.level2"
+                  size="large"
+                  :halves="true"
+                  readonly="true"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
@@ -98,7 +94,6 @@ export default {
 }
 .fondu {
   text-align: right;
-  padding-top: 20px;
 }
 
 .afro {

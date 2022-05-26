@@ -1,10 +1,18 @@
 <template>
   <div id="person-add">
-    <va-form style="width: 300px" tag="form" @submit.prevent="add">
-      <va-input v-model="params.name" label="名稱" :error-messages="errorMessage" />
-      <va-input v-model="params.no" label="工号" />
-      <va-button type="submit" class="mt-2"> 提交 </va-button>
-    </va-form>
+    <el-form label-width="120px" :model="params">
+      <el-form-item label="工号">
+        <el-input v-model="params.no" />
+      </el-form-item>
+      <el-form-item label="名稱">
+        <el-input v-model="params.name" :error-messages="errorMessage" />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="add">提交</el-button>
+
+        <el-button @click="close">取消</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 <script>
@@ -31,6 +39,9 @@ export default {
     init() {
       this.params = this.item;
       this.params.classId = this.pid;
+    },
+    close() {
+      this.$emit("closeAdd", false);
     },
     add() {
       let _this = this;

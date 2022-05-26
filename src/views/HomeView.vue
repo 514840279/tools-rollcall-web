@@ -1,13 +1,13 @@
 <template>
   <div class="home">
-    <div class="row">
-      <div class="flex md2 class-room">
+    <el-row>
+      <el-col :span="4">
         <ClassRoom @toShowPerson="toShowPerson" />
-      </div>
-      <div class="flex md10">
+      </el-col>
+      <el-col :span="20">
         <PersonList v-if="showPerson" />
-      </div>
-    </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -15,8 +15,6 @@
 // @ is an alias to /src
 import PersonList from "@/components/person/Person.vue";
 import ClassRoom from "@/components/classroom/ClassRoom.vue";
-
-
 
 export default {
   name: "HomeView",

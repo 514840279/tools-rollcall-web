@@ -1,9 +1,15 @@
 <template>
   <div id="class-room-add">
-    <va-form style="width: 300px" tag="form" @submit.prevent="add">
-      <va-input v-model="params.name" label="名稱" />
-      <va-button type="submit" class="mt-2"> 提交 </va-button>
-    </va-form>
+    <el-form label-width="120px" :model="params">
+      <el-form-item label="名稱">
+        <el-input v-model="params.name" />
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="add">提交</el-button>
+        <el-button @click="close">取消</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 <script>
@@ -38,6 +44,9 @@ export default {
           // TODO
           console.log(err);
         });
+    },
+    close() {
+      this.$emit("closeAdd", false);
     },
   },
 };

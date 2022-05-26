@@ -1,31 +1,53 @@
 <template>
   <div class="class-room">
-    <va-button @click="toAdd()"> {{ title }}</va-button>
+    <el-row class="row">
+      <el-col :span="12">
+        <el-button type="success" plain @click="toAdd()"> 添加班級</el-button>
+      </el-col>
+      <el-col :span="12">
+        <el-upload
+          ref="uploadRef"
+          class="upload-demo"
+          :action="url"
+          :auto-upload="true"
+          :accept="['.xls', '.xlsx']"
+          :before-upload="beforeUpload"
+        >
+          <template #trigger>
+            <el-button type="success" plain>上传文件</el-button>
+          </template>
+        </el-upload>
+      </el-col>
+    </el-row>
 
-    <table style="width: 100%" class="va-table center">
-      <tbody>
-        <tr v-for="row in datas" :key="row.uuid">
-          <td style="width: 100%; text-align: center">
-            <div class="row">
-              <div class="flex md6">
-                <span @click="showPerson(row)">{{ row.name }}</span>
-              </div>
-              <div class="flex md4">
-                <a href="#" @click="update(row)">修改</a>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <el-row class="crow" v-for="row in datas" :key="row.uuid">
+      <el-col :span="18">
+        <span class="olink" @click="showPerson(row)">{{ row.name }}</span>
+      </el-col>
+      <el-col :span="6">
+        <a href="#" @click="update(row)">修改</a>
+      </el-col>
+    </el-row>
   </div>
-  <va-modal v-model="showModal" :title="title" hide-default-actions overlay-opacity="0.2">
-    <ClassRoomAdd v-if="showModal" @closeAdd="closeModal" :item="item"></ClassRoomAdd>
-  </va-modal>
+
+  <el-dialog
+    v-model="showModal"
+    :title="title"
+    hide-default-actions
+    overlay-opacity="0.2"
+  >
+    <ClassRoomAdd
+      v-if="showModal"
+      @closeAdd="closeModal"
+      :item="item"
+      :destroy-on-close="false"
+    ></ClassRoomAdd>
+  </el-dialog>
 </template>
 
 <script>
 import ClassRoomAdd from "./Add";
+// import axios from "axios";
 
 export default {
   name: "class-room",
@@ -37,9 +59,11 @@ export default {
     return {
       name: "class",
       showModal: false,
-      title: "添加班級",
+      url: "/rollcall/file/uploadFile",
       datas: [],
       item: {},
+      single: [],
+      upLoadProgress: 0,
     };
   },
   mounted() {
@@ -63,6 +87,8 @@ export default {
     toAdd() {
       this.showModal = true;
     },
+    toAddFile() {},
+
     update(row) {
       this.item = row;
       this.showModal = true;
@@ -70,6 +96,15 @@ export default {
     closeModal(val) {
       this.init();
       this.showModal = val;
+    },
+    // 上傳前校驗類型
+    beforeUpload(file) {
+      const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
+      const whiteList = ["xls", "xlsx"];
+      if (whiteList.indexOf(fileSuffix) === -1) {
+        this.$message({ message: "上传文件只能是 .xls/.xlsx", type: "warning" });
+        return false;
+      }
     },
     showPerson(row) {
       this.$emit("toShowPerson", true);
@@ -82,5 +117,13 @@ export default {
 <style lang="scss" scoped>
 .class-room {
   text-align: center;
+}
+.crow {
+  margin-top: 10px;
+  font-size: 20px;
+}
+.olink {
+  color: blue;
+  cursor: pointer;
 }
 </style>
