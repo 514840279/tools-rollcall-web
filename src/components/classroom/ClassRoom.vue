@@ -12,6 +12,8 @@
           :auto-upload="true"
           :accept="['.xls', '.xlsx']"
           :before-upload="beforeUpload"
+          :on-success="toLoad"
+          :on-error="showError"
         >
           <template #trigger>
             <el-button type="success" plain>上传文件</el-button>
@@ -110,6 +112,35 @@ export default {
       this.$emit("toShowPerson", true);
       this.$store.commit("rollcall/setClassRoom", row);
       // this.$store.commit("rollcall/setMess", row.uuid);
+    },
+    toLoad(response, uploadFile) {
+      this.$message({
+        message: "【" + uploadFile.name + "】已經完成上傳，正在後台導入數，請稍後查看。",
+        type: "primary",
+      });
+      let params = { path: response.data[0] };
+
+      let _this = this;
+      this.$http
+        .post("/rollcall/file/load", params)
+        .then((resp) => {
+          console.log(resp);
+          _this.$message({
+            message:
+              "【" + uploadFile.name + "】數據已經加載完成，請刷新頁面查看最新數據",
+            type: "primary",
+          });
+        })
+        .catch((err) => {
+          // TODO
+          console.log(err);
+        });
+    },
+    showError(error, uploadFile) {
+      this.$message({
+        message: "【" + uploadFile.name + "】上傳失敗，消息:" + error.message,
+        type: "error",
+      });
     },
   },
 };

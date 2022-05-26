@@ -117,17 +117,7 @@ export default {
         return item.substring(0, len);
       }
     },
-  },
-  computed: {
-    getPersons() {
-      return this.$store.state.rollcall.persons;
-    },
-  },
-  watch: {
-    getPersons() {
-      this.persons = this.$store.state.rollcall.persons;
-    },
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>
