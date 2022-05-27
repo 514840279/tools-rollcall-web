@@ -6,7 +6,8 @@ module.exports = defineConfig({
   assetsDir: "static", //放置生成的静态文件目录（js css img）
   productionSourceMap: false, // 生产环境是否生成 sourceMap 文件
 
-  devServer: {
+    devServer: {
+      host: "localhost",
       proxy: {
           '^/rollcall': {
               target: 'http://localhost:9002/', //接口域名

@@ -23,11 +23,11 @@
     </el-row>
 
     <el-row class="crow" v-for="row in datas" :key="row.uuid">
-      <el-col :span="18">
+      <el-col :span="14">
         <span class="olink" @click="showPerson(row)">{{ row.name }}</span>
       </el-col>
-      <el-col :span="6">
-        <a href="#" @click="update(row)">修改</a>
+      <el-col :span="10">
+        <a href="#" @click="update(row)">修改</a> <a href="#" @click="dele(row)">删除</a>
       </el-col>
     </el-row>
   </div>
@@ -107,6 +107,18 @@ export default {
         this.$message({ message: "上传文件只能是 .xls/.xlsx", type: "warning" });
         return false;
       }
+    },
+    dele(row) {
+      this.$http
+        .post("/rollcall/classRoom/deleteRoom", row)
+        .then((data) => {
+          console.log(data);
+          this.init();
+        })
+        .catch((err) => {
+          // TODO
+          console.log(err);
+        });
     },
     showPerson(row) {
       this.$emit("toShowPerson", true);
